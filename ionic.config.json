@@ -1,0 +1,7 @@
+{
+  "name": "todoMotivation",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
