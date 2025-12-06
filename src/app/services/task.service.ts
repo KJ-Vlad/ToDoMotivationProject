@@ -61,4 +61,10 @@ export class TaskService {
         task.done = !task.done;
         await this.saveTasks();
     }
+
+    async deleteTask(id: string) {
+        await this.loadTasks();
+        this.tasks = this.tasks.filter(t => t.id !== id);
+        await this.saveTasks();
+    }
 }

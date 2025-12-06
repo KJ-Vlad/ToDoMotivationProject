@@ -11,25 +11,65 @@
 
 <ion-content>
 
+  <!-- Hledání úkolů -->
+  <ion-searchbar
+    [(ngModel)]="searchTerm"
+    placeholder="Hledat úkoly..."
+    show-clear-button="focus">
+  </ion-searchbar>
+
   <ng-container *ngIf="!loading; else loadingTpl">
-    <ng-container *ngIf="tasks.length > 0; else emptyTpl">
-      <ion-list>
-        <ion-item *ngFor="let task of tasks" (click)="editTask(task)">
-          <ion-checkbox
-            slot="start"
-            [checked]="task.done"
-            (ionChange)="toggleDone(task)">
-          </ion-checkbox>
+    <ng-container *ngIf="filteredTasks.length > 0; else emptyTpl">
 
-          <ion-label>
-            <h2 [ngStyle]="{'text-decoration': task.done ? 'line-through' : 'none'}">
-              {{ task.title }}
-            </h2>
-            <p *ngIf="task.note">{{ task.note }}</p>
-          </ion-label>
+      <div class="task-list">
+        <!-- Jednotlivé úkoly jako kartičky -->
+        <ion-card
+          *ngFor="let task of filteredTasks"
+          class="task-card"
+          [ngClass]="{'task-done': task.done}"
+          (click)="editTask(task)">
 
-        </ion-item>
-      </ion-list>
+          <ion-card-content>
+            <div class="task-row">
+              <!-- Text úkolu vlevo -->
+              <div class="task-text">
+                <h2>{{ task.title }}</h2>
+                <p *ngIf="task.note">{{ task.note }}</p>
+              </div>
+
+              <!-- Tři tlačítka vpravo -->
+              <div class="task-actions" (click)="$event.stopPropagation()">
+                <!-- ✔ označit hotovo -->
+                <ion-button
+                  fill="clear"
+                  size="small"
+                  (click)="toggleDone(task)">
+                  <ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
+                </ion-button>
+
+                <!-- ✖ smazat -->
+                <ion-button
+                  fill="clear"
+                  size="small"
+                  color="danger"
+                  (click)="deleteTask(task, $event)">
+                  <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+                </ion-button>
+
+                <!-- ✏ upravit -->
+                <ion-button
+                  fill="clear"
+                  size="small"
+                  (click)="editTask(task, $event)">
+                  <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                </ion-button>
+              </div>
+            </div>
+          </ion-card-content>
+
+        </ion-card>
+      </div>
+
     </ng-container>
   </ng-container>
 
@@ -38,11 +78,12 @@
   </ng-template>
 
   <ng-template #emptyTpl>
-    <div class="empty">Zatím nemáš žádné úkoly.</div>
+    <div class="empty">Žádné úkoly pro zobrazení.</div>
   </ng-template>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="newTask()">
+  <!-- plus tlačítko uprostřed dole -->
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+    <ion-fab-button class="add-btn" (click)="newTask()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

@@ -1,13 +1,22 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>edit-task</ion-title>
+    <ion-title>{{ isNew ? 'Nový úkol' : 'Upravit úkol' }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">edit-task</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  
+  <ion-item>
+    <ion-label position="stacked">Název úkolu</ion-label>
+    <ion-input [(ngModel)]="title"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Poznámka (nepovinné)</ion-label>
+    <ion-textarea rows="4" [(ngModel)]="note"></ion-textarea>
+  </ion-item>
+
+  <ion-button expand="block" (click)="save()">
+    Uložit ukol
+  </ion-button>
 </ion-content>
