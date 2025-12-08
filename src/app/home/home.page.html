@@ -1,75 +1,46 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Moje úkoly</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="goToMotivation()">
-        <ion-icon name="bulb-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-searchbar placeholder="Hledat úkoly..."></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
-  <!-- Hledání úkolů -->
-  <ion-searchbar
-    [(ngModel)]="searchTerm"
-    placeholder="Hledat úkoly..."
-    show-clear-button="focus">
-  </ion-searchbar>
-
   <ng-container *ngIf="!loading; else loadingTpl">
-    <ng-container *ngIf="filteredTasks.length > 0; else emptyTpl">
+    <ng-container *ngIf="tasks.length > 0; else emptyTpl">
+      <ion-list>
+        <ion-item *ngFor="let task of tasks">
+          <!-- CHECKBOX – pouze přepíná splněno/nesplněno -->
+          <ion-checkbox
+            slot="start"
+            [checked]="task.done"
+            (ionClick)="$event.stopPropagation()"
+            (ionChange)="toggleDone(task)">
+          </ion-checkbox>
 
-      <div class="task-list">
-        <!-- Jednotlivé úkoly jako kartičky -->
-        <ion-card
-          *ngFor="let task of filteredTasks"
-          class="task-card"
-          [ngClass]="{'task-done': task.done}"
-          (click)="editTask(task)">
+          <!-- TEXT ÚKOLU -->
+          <ion-label>
+            <h2 [ngStyle]="{'text-decoration': task.done ? 'line-through' : 'none'}">
+              {{ task.title }}
+            </h2>
+            <p *ngIf="task.note">
+              {{ task.note }}
+            </p>
+          </ion-label>
 
-          <ion-card-content>
-            <div class="task-row">
-              <!-- Text úkolu vlevo -->
-              <div class="task-text">
-                <h2>{{ task.title }}</h2>
-                <p *ngIf="task.note">{{ task.note }}</p>
-              </div>
-
-              <!-- Tři tlačítka vpravo -->
-              <div class="task-actions" (click)="$event.stopPropagation()">
-                <!-- ✔ označit hotovo -->
-                <ion-button
-                  fill="clear"
-                  size="small"
-                  (click)="toggleDone(task)">
-                  <ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
-                </ion-button>
-
-                <!-- ✖ smazat -->
-                <ion-button
-                  fill="clear"
-                  size="small"
-                  color="danger"
-                  (click)="deleteTask(task, $event)">
-                  <ion-icon slot="icon-only" name="close-outline"></ion-icon>
-                </ion-button>
-
-                <!-- ✏ upravit -->
-                <ion-button
-                  fill="clear"
-                  size="small"
-                  (click)="editTask(task, $event)">
-                  <ion-icon slot="icon-only" name="create-outline"></ion-icon>
-                </ion-button>
-              </div>
-            </div>
-          </ion-card-content>
-
-        </ion-card>
-      </div>
-
+          <!-- TLAČÍTKO S TUŽKOU – otevře editaci úkolu -->
+          <ion-button
+            fill="clear"
+            slot="end"
+            (click)="editTask(task); $event.stopPropagation()">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
     </ng-container>
   </ng-container>
 
@@ -78,13 +49,20 @@
   </ng-template>
 
   <ng-template #emptyTpl>
-    <div class="empty">Žádné úkoly pro zobrazení.</div>
+    <div class="empty">Zatím nemáš žádné úkoly.</div>
   </ng-template>
 
-  <!-- plus tlačítko uprostřed dole -->
-  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
-    <ion-fab-button class="add-btn" (click)="newTask()">
+  <!-- FAB plus vpravo dole – nový úkol -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="newTask()">
       <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- FAB žárovka vlevo dole – motivační citát -->
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button style="--background: #ffcc00;" (click)="goToMotivation()">
+      <ion-icon name="bulb-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
