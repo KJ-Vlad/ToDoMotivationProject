@@ -9,7 +9,6 @@ import { AuthService } from './auth.service';
 export class TaskService {
   private tasks: Task[] = [];
 
-  // abychom věděli, pro jakého uživatele jsou data načtená
   private loadedForEmail: string | null = null;
 
   constructor(private auth: AuthService) {}
@@ -27,13 +26,11 @@ export class TaskService {
   async loadTasks(): Promise<void> {
     const email = await this.getCurrentEmailOrThrow();
 
-    // když se uživatel změnil, resetujeme cache
     if (this.loadedForEmail !== email) {
       this.tasks = [];
       this.loadedForEmail = null;
     }
 
-    // už je načteno pro tohoto uživatele
     if (this.loadedForEmail === email) return;
 
     const key = this.getTasksKey(email);
@@ -102,7 +99,6 @@ export class TaskService {
     await this.saveTasks();
   }
 
-  // volitelné: když se odhlásíš, můžeš zavolat tohle, aby se vyčistila paměť v appce
   clearCache() {
     this.tasks = [];
     this.loadedForEmail = null;

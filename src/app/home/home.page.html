@@ -8,7 +8,12 @@
   </ion-toolbar>
 
   <ion-toolbar class="searchbar">
-    <ion-searchbar calss="search" placeholder="Hledat úkoly..."></ion-searchbar>
+    <ion-searchbar
+      class="search"
+      placeholder="Hledat úkoly..."
+      [(ngModel)]="searchText"
+      (ionInput)="onSearch($event)"
+    ></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
@@ -25,42 +30,37 @@
   </div>
 
   <ng-container *ngIf="!loading; else loadingTpl">
-    <ng-container *ngIf="sortedTasks.length > 0; else emptyTpl">
+    <ng-container *ngIf="filteredSortedTasks.length > 0; else emptyTpl">
       <ion-list>
 
-        <ion-item-sliding *ngFor="let task of sortedTasks">
-          <ion-item [class.task-done]="task.done">
+        <ion-item *ngFor="let task of filteredSortedTasks" [class.task-done]="task.done">
 
-            <!-- CHECKBOX pouze přepíná -->
-            <ion-checkbox
-              slot="start"
-              [checked]="task.done"
-              (ionClick)="$event.stopPropagation()"
-              (ionChange)="toggleDone(task)">
-            </ion-checkbox>
+          <!-- CHECKBOX pouze přepíná -->
+          <ion-checkbox
+            slot="start"
+            [checked]="task.done"
+            (click)="$event.stopPropagation()"
+            (ionChange)="toggleDone(task)">
+          </ion-checkbox>
 
-            <!-- TEXT -->
-            <ion-label>
-              <h2 class="task-title">{{ task.title }}</h2>
-              <p *ngIf="task.note">{{ task.note }}</p>
-              <p *ngIf="task.date">{{ task.date | date:'d.M.yyyy' }}</p>
-            </ion-label>
+          <!-- TEXT -->
+          <ion-label>
+            <h2 class="task-title">{{ task.title }}</h2>
+            <p *ngIf="task.note">{{ task.note }}</p>
+            <p *ngIf="task.date">{{ task.date | date:'d.M.yyyy' }}</p>
+          </ion-label>
 
-            <!-- TUŽKA -->
-            <ion-button fill="clear" slot="end" (click)="editTask(task); $event.stopPropagation()">
-              <ion-icon name="create-outline"></ion-icon>
-            </ion-button>
+          <!-- EDIT -->
+          <ion-button fill="clear" slot="end" (click)="editTask(task)">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
 
-          </ion-item>
+          <!-- DELETE (VIDITELNÝ KOŠ) -->
+          <ion-button fill="clear" color="danger" slot="end" (click)="confirmDelete(task)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
 
-          <!-- Swipe: delete -->
-          <ion-item-options side="end">
-            <ion-item-option color="danger" (click)="deleteTask(task)">
-              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-            </ion-item-option>
-          </ion-item-options>
-
-        </ion-item-sliding>
+        </ion-item>
 
       </ion-list>
     </ng-container>
@@ -94,6 +94,5 @@
       <ion-icon name="bulb-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
 
 </ion-content>
