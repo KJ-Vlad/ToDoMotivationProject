@@ -15,7 +15,12 @@
     <ion-textarea rows="4" [(ngModel)]="note"></ion-textarea>
   </ion-item>
 
+  <ion-item>
+    <ion-label position="stacked">Datum (nepovinné)</ion-label>
+    <ion-datetime presentation="date" [(ngModel)]="date"></ion-datetime>
+  </ion-item>
+
   <ion-button expand="block" (click)="save()">
-    Uložit ukol
+    Uložit
   </ion-button>
 </ion-content>

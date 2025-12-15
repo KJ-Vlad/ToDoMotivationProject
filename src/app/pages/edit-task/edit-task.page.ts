@@ -17,6 +17,7 @@ export class EditTaskPage implements OnInit {
   id!: string;
   title = '';
   note = '';
+  date: string | null = null;
   isNew = true;
 
   constructor(
@@ -31,11 +32,18 @@ export class EditTaskPage implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id') || 'new';
     this.isNew = this.id === 'new';
 
-    if (!this.isNew) {
+    if (this.isNew) {
+      // když přijdu z kalendáře, datum se předvyplní
+      const dateParam = this.route.snapshot.queryParamMap.get('date');
+      if (dateParam) {
+        this.date = dateParam;
+      }
+    } else {
       const task = this.taskService.getTaskById(this.id);
       if (task) {
         this.title = task.title;
         this.note = task.note || '';
+        this.date = task.date || null;
       }
     }
   }
@@ -47,10 +55,12 @@ export class EditTaskPage implements OnInit {
       return;
     }
 
+    const trimmedNote = this.note.trim();
+
     if (this.isNew) {
-      await this.taskService.addTask(trimmedTitle, this.note.trim());
+      await this.taskService.addTask(trimmedTitle, trimmedNote, this.date);
     } else {
-      await this.taskService.updateTask(this.id, trimmedTitle, this.note.trim());
+      await this.taskService.updateTask(this.id, trimmedTitle, trimmedNote, this.date);
     }
 
     this.router.navigate(['/home']);

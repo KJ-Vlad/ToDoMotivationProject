@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Registrace</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label position="stacked">Email</ion-label>
+    <ion-input [(ngModel)]="email" type="email" autocomplete="email"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Heslo</ion-label>
+    <ion-input [(ngModel)]="password" type="password" autocomplete="new-password"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Heslo znovu</ion-label>
+    <ion-input [(ngModel)]="password2" type="password" autocomplete="new-password"></ion-input>
+  </ion-item>
+
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <ion-button expand="block" [disabled]="loading" (click)="register()">
+    {{ loading ? 'Registruji…' : 'Vytvořit účet' }}
+  </ion-button>
+
+  <ion-button expand="block" fill="clear" (click)="goLogin()">
+    Už máš účet? Přihlásit
+  </ion-button>
+</ion-content>

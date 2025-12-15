@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Kalendář</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="calendar-content">
+  <div class="calendar-wrapper">
+    <ion-datetime
+      presentation="date"
+      min="2000-01-01"
+      max="2100-12-31"
+      (ionChange)="onDateChange($event)">
+    </ion-datetime>
+
+    <ion-button
+      expand="block"
+      class="add-btn"
+      *ngIf="selectedDate"
+      (click)="addTaskForDate()">
+      ➕ Vytvořit úkol pro tento den
+    </ion-button>
+  </div>
+</ion-content>

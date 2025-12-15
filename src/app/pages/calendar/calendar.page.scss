@@ -1,0 +1,19 @@
+.calendar-content {
+  --background: var(--ion-background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.calendar-wrapper {
+  text-align: center;
+}
+
+ion-datetime {
+  max-width: 350px;
+  width: 100%;
+}
+
+.add-btn {
+  margin-top: 20px;
+}

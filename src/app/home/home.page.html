@@ -1,6 +1,10 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Moje úkoly</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">Odhlásit</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 
   <ion-toolbar>
@@ -10,36 +14,55 @@
 
 <ion-content>
 
+  <!-- Statistiky -->
+  <div class="stats" *ngIf="totalTasks > 0">
+    <div class="stats-text">
+      Splněno: {{ completedTasks }} / {{ totalTasks }} úkolů
+      <span class="stats-percent">({{ completionPercent }} %)</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="completionPercent"></div>
+    </div>
+  </div>
+
   <ng-container *ngIf="!loading; else loadingTpl">
-    <ng-container *ngIf="tasks.length > 0; else emptyTpl">
+    <ng-container *ngIf="sortedTasks.length > 0; else emptyTpl">
       <ion-list>
-        <ion-item *ngFor="let task of tasks">
-          <!-- CHECKBOX – pouze přepíná splněno/nesplněno -->
-          <ion-checkbox
-            slot="start"
-            [checked]="task.done"
-            (ionClick)="$event.stopPropagation()"
-            (ionChange)="toggleDone(task)">
-          </ion-checkbox>
 
-          <!-- TEXT ÚKOLU -->
-          <ion-label>
-            <h2 [ngStyle]="{'text-decoration': task.done ? 'line-through' : 'none'}">
-              {{ task.title }}
-            </h2>
-            <p *ngIf="task.note">
-              {{ task.note }}
-            </p>
-          </ion-label>
+        <ion-item-sliding *ngFor="let task of sortedTasks">
+          <ion-item [class.task-done]="task.done">
 
-          <!-- TLAČÍTKO S TUŽKOU – otevře editaci úkolu -->
-          <ion-button
-            fill="clear"
-            slot="end"
-            (click)="editTask(task); $event.stopPropagation()">
-            <ion-icon name="create-outline"></ion-icon>
-          </ion-button>
-        </ion-item>
+            <!-- CHECKBOX pouze přepíná -->
+            <ion-checkbox
+              slot="start"
+              [checked]="task.done"
+              (ionClick)="$event.stopPropagation()"
+              (ionChange)="toggleDone(task)">
+            </ion-checkbox>
+
+            <!-- TEXT -->
+            <ion-label>
+              <h2 class="task-title">{{ task.title }}</h2>
+              <p *ngIf="task.note">{{ task.note }}</p>
+              <p *ngIf="task.date">{{ task.date | date:'d.M.yyyy' }}</p>
+            </ion-label>
+
+            <!-- TUŽKA -->
+            <ion-button fill="clear" slot="end" (click)="editTask(task); $event.stopPropagation()">
+              <ion-icon name="create-outline"></ion-icon>
+            </ion-button>
+
+          </ion-item>
+
+          <!-- Swipe: delete -->
+          <ion-item-options side="end">
+            <ion-item-option color="danger" (click)="deleteTask(task)">
+              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+
+        </ion-item-sliding>
+
       </ion-list>
     </ng-container>
   </ng-container>
@@ -52,14 +75,21 @@
     <div class="empty">Zatím nemáš žádné úkoly.</div>
   </ng-template>
 
-  <!-- FAB plus vpravo dole – nový úkol -->
+  <!-- FAB plus vpravo dole -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="newTask()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
-  <!-- FAB žárovka vlevo dole – motivační citát -->
+  <!-- FAB kalendář uprostřed dole -->
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+    <ion-fab-button color="tertiary" (click)="goToCalendar()">
+      <ion-icon name="calendar-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- FAB žárovka vlevo dole -->
   <ion-fab vertical="bottom" horizontal="start" slot="fixed">
     <ion-fab-button style="--background: #ffcc00;" (click)="goToMotivation()">
       <ion-icon name="bulb-outline"></ion-icon>
