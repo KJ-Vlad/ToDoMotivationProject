@@ -6,8 +6,8 @@
 
 <ion-content fullscreen class="edit-content">
 
-  <div class="edit-wrapper">
-    <div class="edit-card">
+  <div class="edit-wrapper edit-center">
+    <div class="edit-card compact">
 
       <!-- Název -->
       <ion-item lines="none" class="glass-item">
@@ -32,25 +32,28 @@
 
       <!-- Datum -->
       <div class="date-block">
-        <div class="date-label">Datum (nepovinně)</div>
+        <div class="date-label">Datum (nepovinné)</div>
 
-        <ion-datetime
-          presentation="date"
-          locale="cs-CZ"
-          min="2000-01-01"
-          max="2100-12-31"
-          [(ngModel)]="date"
-        ></ion-datetime>
+        <!-- Kalendář necháváme velký -->
+        <div class="task-calendar-card">
+          <ion-datetime
+            presentation="date"
+            locale="cs-CZ"
+            min="2000-01-01"
+            max="2100-12-31"
+            [(ngModel)]="date"
+          ></ion-datetime>
+        </div>
       </div>
 
-      <!-- Akce -->
-      <div class="actions">
-        <ion-button color="danger" expand="block" (click)="cancel()">
-          ZRUŠIT
-        </ion-button>
-
-        <ion-button expand="block" class="save-btn" (click)="save()">
+      <!-- Akce vedle sebe -->
+      <div class="actions actions-row">
+        <ion-button class="btn-save save-btn" expand="block" (click)="save()">
           ULOŽIT
+        </ion-button>
+        
+        <ion-button class="btn-cancel" color="danger" expand="block" (click)="cancel()">
+          ZRUŠIT
         </ion-button>
       </div>
 

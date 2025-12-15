@@ -13,7 +13,6 @@ import { TaskService } from '../../services/task.service';
   styleUrls: ['./edit-task.page.scss'],
 })
 export class EditTaskPage implements OnInit {
-
   id!: string;
   title = '';
   note = '';
@@ -21,7 +20,7 @@ export class EditTaskPage implements OnInit {
   isNew = true;
 
   // odkud jsem přišel (home/calendar) – volitelné
-  from: string | null = null;
+  from: 'home' | 'calendar' | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -32,34 +31,38 @@ export class EditTaskPage implements OnInit {
   async ngOnInit() {
     await this.taskService.loadTasks();
 
+    // id je buď skutečné id, nebo "new"
     this.id = this.route.snapshot.paramMap.get('id') || 'new';
     this.isNew = this.id === 'new';
 
-    this.from = this.route.snapshot.queryParamMap.get('from');
+    // odkud jsem přišel (query param)
+    const fromParam = this.route.snapshot.queryParamMap.get('from');
+    if (fromParam === 'calendar' || fromParam === 'home') {
+      this.from = fromParam;
+    } else {
+      this.from = null;
+    }
 
     if (this.isNew) {
       // když přijdu z kalendáře, datum se předvyplní
       const dateParam = this.route.snapshot.queryParamMap.get('date');
-      if (dateParam) {
-        this.date = dateParam;
-      }
+      if (dateParam) this.date = dateParam;
     } else {
+      // edit existujícího úkolu
       const task = this.taskService.getTaskById(this.id);
       if (task) {
         this.title = task.title;
         this.note = task.note || '';
         this.date = task.date || null;
+      } else {
+        // když úkol neexistuje (špatné id), vrať na home
+        this.router.navigate(['/home']);
       }
     }
   }
 
   cancel() {
-    // pokud jsem přišel z kalendáře, vrať mě na kalendář, jinak home
-    if (this.from === 'calendar') {
-      this.router.navigate(['/calendar']);
-      return;
-    }
-    this.router.navigate(['/home']);
+    this.goBack();
   }
 
   async save() {
@@ -77,7 +80,10 @@ export class EditTaskPage implements OnInit {
       await this.taskService.updateTask(this.id, trimmedTitle, trimmedNote, this.date);
     }
 
-    // po uložení – také podle odkud jsem přišel
+    this.goBack();
+  }
+
+  private goBack() {
     if (this.from === 'calendar') {
       this.router.navigate(['/calendar']);
       return;
