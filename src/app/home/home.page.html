@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar class="topbar">
     <ion-title>Moje úkoly</ion-title>
 
     <ion-buttons slot="end">
@@ -7,22 +7,21 @@
     </ion-buttons>
   </ion-toolbar>
 
-  <ion-toolbar>
-    <ion-searchbar placeholder="Hledat úkoly..."></ion-searchbar>
+  <ion-toolbar class="searchbar">
+    <ion-searchbar calss="search" placeholder="Hledat úkoly..."></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
   <!-- Statistiky -->
-  <div class="stats" *ngIf="totalTasks > 0">
-    <div class="stats-text">
-      Splněno: {{ completedTasks }} / {{ totalTasks }} úkolů
-      <span class="stats-percent">({{ completionPercent }} %)</span>
+  <div class="progress-wrapper" *ngIf="totalTasks > 0">
+    <div class="progress-text">
+      <span>Splněno: {{ completedTasks }} / {{ totalTasks }}</span>
+      <span>{{ completionPercent }} %</span>
     </div>
-    <div class="progress-bar">
-      <div class="progress-fill" [style.width.%]="completionPercent"></div>
-    </div>
+
+    <ion-progress-bar [value]="completionPercent / 100"></ion-progress-bar>
   </div>
 
   <ng-container *ngIf="!loading; else loadingTpl">
@@ -75,25 +74,26 @@
     <div class="empty">Zatím nemáš žádné úkoly.</div>
   </ng-template>
 
-  <!-- FAB plus vpravo dole -->
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <!-- FAB: + uprostřed dole -->
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
     <ion-fab-button (click)="newTask()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
-  <!-- FAB kalendář uprostřed dole -->
-  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
+  <!-- FAB: kalendář vpravo dole -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button color="tertiary" (click)="goToCalendar()">
       <ion-icon name="calendar-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
-  <!-- FAB žárovka vlevo dole -->
+  <!-- FAB: motivace vlevo dole -->
   <ion-fab vertical="bottom" horizontal="start" slot="fixed">
     <ion-fab-button style="--background: #ffcc00;" (click)="goToMotivation()">
       <ion-icon name="bulb-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
 
 </ion-content>

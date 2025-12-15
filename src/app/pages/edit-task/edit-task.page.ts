@@ -20,6 +20,9 @@ export class EditTaskPage implements OnInit {
   date: string | null = null;
   isNew = true;
 
+  // odkud jsem přišel (home/calendar) – volitelné
+  from: string | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -31,6 +34,8 @@ export class EditTaskPage implements OnInit {
 
     this.id = this.route.snapshot.paramMap.get('id') || 'new';
     this.isNew = this.id === 'new';
+
+    this.from = this.route.snapshot.queryParamMap.get('from');
 
     if (this.isNew) {
       // když přijdu z kalendáře, datum se předvyplní
@@ -48,6 +53,15 @@ export class EditTaskPage implements OnInit {
     }
   }
 
+  cancel() {
+    // pokud jsem přišel z kalendáře, vrať mě na kalendář, jinak home
+    if (this.from === 'calendar') {
+      this.router.navigate(['/calendar']);
+      return;
+    }
+    this.router.navigate(['/home']);
+  }
+
   async save() {
     const trimmedTitle = this.title.trim();
     if (!trimmedTitle) {
@@ -63,6 +77,11 @@ export class EditTaskPage implements OnInit {
       await this.taskService.updateTask(this.id, trimmedTitle, trimmedNote, this.date);
     }
 
+    // po uložení – také podle odkud jsem přišel
+    if (this.from === 'calendar') {
+      this.router.navigate(['/calendar']);
+      return;
+    }
     this.router.navigate(['/home']);
   }
 }

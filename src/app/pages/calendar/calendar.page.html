@@ -1,24 +1,40 @@
-<ion-header>
+<ion-header translucent>
   <ion-toolbar>
     <ion-title>Kalendář</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="calendar-content">
-  <div class="calendar-wrapper">
-    <ion-datetime
-      presentation="date"
-      min="2000-01-01"
-      max="2100-12-31"
-      (ionChange)="onDateChange($event)">
-    </ion-datetime>
+<ion-content fullscreen>
 
-    <ion-button
-      expand="block"
-      class="add-btn"
-      *ngIf="selectedDate"
-      (click)="addTaskForDate()">
-      ➕ Vytvořit úkol pro tento den
-    </ion-button>
+  <div class="calendar-wrapper">
+    <div class="calendar-card">
+
+      <!-- KLASICKÝ KALENDÁŘ (DNY) -->
+      <ion-datetime
+        presentation="date"
+        locale="cs-CZ"
+        min="2000-01-01"
+        max="2100-12-31"
+        [(ngModel)]="selectedDate">
+      </ion-datetime>
+
+      <ion-button
+        expand="block"
+        class="create-task-btn"
+        (click)="createTaskForDate()"
+        [disabled]="!selectedDate">
+        <ion-icon name="add-outline" slot="start"></ion-icon>
+        VYTVOŘIT ÚKOL PRO TENTO DEN
+      </ion-button>
+
+    </div>
   </div>
+
+  <!-- FAB: zpět na Moje úkoly (vpravo dole) -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="primary" (click)="goHome()">
+      <ion-icon name="home-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>

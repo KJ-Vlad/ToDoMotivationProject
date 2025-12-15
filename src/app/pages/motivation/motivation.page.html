@@ -1,30 +1,38 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Motivační citát</ion-title>
+    <ion-title class="app-title">Motivační citát</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
 
-  <ng-container *ngIf="loading; else contentTpl">
-    <ion-spinner class="center"></ion-spinner>
-  </ng-container>
+  <div class="wrap app-card">
 
-  <ng-template #contentTpl>
-    <div *ngIf="error; else quoteTpl" class="error">
+    <!-- Načítání -->
+    <ion-spinner *ngIf="loading" class="center"></ion-spinner>
+
+    <!-- Chyba -->
+    <div *ngIf="!loading && error" class="error">
       {{ error }}
     </div>
 
-    <ng-template #quoteTpl>
-      <p class="quote">"{{ quote }}"</p>
-    </ng-template>
-  </ng-template>
+    <!-- Citát -->
+    <div *ngIf="!loading && !error && quote" class="quote">
+      “{{ quote }}”
+    </div>
 
-  <ion-button expand="block" (click)="loadQuote()">
-    Načíst nový citát
-  </ion-button>
+    <!-- Pokud není citát -->
+    <div *ngIf="!loading && !error && !quote" class="sub">
+      Zatím nebyl načten žádný citát. Klikni na tlačítko níže.
+    </div>
 
-  <!-- FAB návrat zpět na úkoly -->
+    <ion-button expand="block" class="ion-margin-top" (click)="loadQuote()">
+      Načíst nový citát
+    </ion-button>
+
+  </div>
+
+  <!-- FAB zpět na Home -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button color="primary" (click)="goHome()">
       <ion-icon name="home-outline"></ion-icon>

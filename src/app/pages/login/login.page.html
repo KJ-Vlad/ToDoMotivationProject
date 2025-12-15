@@ -1,27 +1,36 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Přihlášení</ion-title>
+    <ion-title class="app-title">Přihlášení</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-item>
-    <ion-label position="stacked">Email</ion-label>
-    <ion-input [(ngModel)]="email" type="email" autocomplete="email"></ion-input>
-  </ion-item>
+  <div class="auth-wrap">
+    <div class="app-card auth-card">
+      <div class="auth-head">
+        <h2>Vítej zpět 👋</h2>
+        <p>Přihlas se a pokračuj v úkolech.</p>
+      </div>
 
-  <ion-item>
-    <ion-label position="stacked">Heslo</ion-label>
-    <ion-input [(ngModel)]="password" type="password" autocomplete="current-password"></ion-input>
-  </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input [(ngModel)]="email" type="email" autocomplete="email"></ion-input>
+      </ion-item>
 
-  <div *ngIf="error" class="error">{{ error }}</div>
+      <ion-item>
+        <ion-label position="stacked">Heslo</ion-label>
+        <ion-input [(ngModel)]="password" type="password" autocomplete="current-password"></ion-input>
+      </ion-item>
 
-  <ion-button expand="block" [disabled]="loading" (click)="login()">
-    {{ loading ? 'Přihlašuji…' : 'Přihlásit se' }}
-  </ion-button>
+      <div *ngIf="error" class="auth-error">{{ error }}</div>
 
-  <ion-button expand="block" fill="clear" (click)="goRegister()">
-    Nemáš účet? Registrovat
-  </ion-button>
+      <ion-button expand="block" [disabled]="loading" (click)="login()">
+        {{ loading ? 'Přihlašuji…' : 'Přihlásit se' }}
+      </ion-button>
+
+      <ion-button expand="block" fill="clear" (click)="goRegister()">
+        Nemáš účet? Registrovat
+      </ion-button>
+    </div>
+  </div>
 </ion-content>

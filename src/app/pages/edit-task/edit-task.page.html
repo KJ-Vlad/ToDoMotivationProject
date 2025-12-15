@@ -1,26 +1,60 @@
-<ion-header>
+<ion-header translucent>
   <ion-toolbar>
-    <ion-title>{{ isNew ? 'Nový úkol' : 'Upravit úkol' }}</ion-title>
+    <ion-title>Nový úkol</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-item>
-    <ion-label position="stacked">Název úkolu</ion-label>
-    <ion-input [(ngModel)]="title"></ion-input>
-  </ion-item>
+<ion-content fullscreen class="edit-content">
 
-  <ion-item>
-    <ion-label position="stacked">Poznámka (nepovinné)</ion-label>
-    <ion-textarea rows="4" [(ngModel)]="note"></ion-textarea>
-  </ion-item>
+  <div class="edit-wrapper">
+    <div class="edit-card">
 
-  <ion-item>
-    <ion-label position="stacked">Datum (nepovinné)</ion-label>
-    <ion-datetime presentation="date" [(ngModel)]="date"></ion-datetime>
-  </ion-item>
+      <!-- Název -->
+      <ion-item lines="none" class="glass-item">
+        <ion-label position="stacked">Název úkolu</ion-label>
+        <ion-input
+          [(ngModel)]="title"
+          placeholder="Např. udělat projekt..."
+          maxlength="60"
+        ></ion-input>
+      </ion-item>
 
-  <ion-button expand="block" (click)="save()">
-    Uložit
-  </ion-button>
+      <!-- Poznámka -->
+      <ion-item lines="none" class="glass-item">
+        <ion-label position="stacked">Poznámka (nepovinně)</ion-label>
+        <ion-textarea
+          [(ngModel)]="note"
+          placeholder="Detail, poznámka..."
+          autoGrow="true"
+          maxlength="240"
+        ></ion-textarea>
+      </ion-item>
+
+      <!-- Datum -->
+      <div class="date-block">
+        <div class="date-label">Datum (nepovinně)</div>
+
+        <ion-datetime
+          presentation="date"
+          locale="cs-CZ"
+          min="2000-01-01"
+          max="2100-12-31"
+          [(ngModel)]="date"
+        ></ion-datetime>
+      </div>
+
+      <!-- Akce -->
+      <div class="actions">
+        <ion-button color="danger" expand="block" (click)="cancel()">
+          ZRUŠIT
+        </ion-button>
+
+        <ion-button expand="block" class="save-btn" (click)="save()">
+          ULOŽIT
+        </ion-button>
+      </div>
+
+    </div>
+  </div>
+
 </ion-content>

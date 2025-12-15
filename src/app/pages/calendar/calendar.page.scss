@@ -1,19 +1,90 @@
-.calendar-content {
-  --background: var(--ion-background-color);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+:host {
+  display: block;
 }
 
+/* Pozadí jako Home (gradient) */
+ion-content {
+  --background: transparent;
+  background: radial-gradient(1200px 700px at 15% 20%, rgba(88, 70, 255, 0.35), transparent 60%),
+              radial-gradient(1200px 700px at 85% 35%, rgba(0, 180, 255, 0.25), transparent 55%),
+              linear-gradient(135deg, #0b1020 0%, #08131a 45%, #07151b 100%);
+}
+
+/* Vycentrování karty doprostřed */
 .calendar-wrapper {
-  text-align: center;
+  min-height: calc(100vh - 56px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
 }
 
+/* Glass card */
+.calendar-card {
+  width: min(760px, 92vw);
+  border-radius: 18px;
+  padding: 18px;
+
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  background: rgba(20, 35, 60, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+
+  overflow: hidden;
+}
+
+/* Kalendář se "fitne" do karty */
 ion-datetime {
-  max-width: 350px;
   width: 100%;
+  margin: 0 auto;
+
+  /* klíč: ať samotný component nemá šedé pozadí */
+  --background: transparent;
+
+  --padding-top: 10px;
+  --padding-bottom: 10px;
 }
 
-.add-btn {
-  margin-top: 20px;
+/* Vnitřní container kalendáře (odstraní šedou “krabici”) */
+ion-datetime::part(container),
+ion-datetime::part(calendar) {
+  background: transparent !important;
+}
+
+/* Obsah kalendáře jako jemný panel (sklo) */
+ion-datetime::part(content) {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+/* Header uvnitř kalendáře (měsíc/rok + šipky) – ať není na šedé */
+ion-datetime::part(month-year-button),
+ion-datetime::part(next-button),
+ion-datetime::part(previous-button) {
+  background: transparent !important;
+}
+
+/* tlačítko vytvoření úkolu */
+.create-task-btn {
+  margin-top: 14px;
+  --border-radius: 999px;
+  --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  font-weight: 800;
+  letter-spacing: 0.4px;
+}
+
+/* === FAB: aby nikdy nezmizel pod plochu === */
+ion-fab {
+  position: fixed; /* důležité, když něco rodičovského “řeže” obsah */
+  right: 18px;
+  bottom: 18px;
+  z-index: 99999 !important;
+}
+
+ion-fab-button {
+  z-index: 99999 !important;
 }

@@ -1,7 +1,14 @@
-.quote {
-  font-size: 1.3rem;
+.wrap {
+  width: min(820px, 100%);
+  margin: 18px auto;
   text-align: center;
-  margin: 2rem 0;
+}
+
+.quote {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 650;
 }
 
 .center {
@@ -9,8 +16,13 @@
   margin: 2rem auto;
 }
 
+
+.sub {
+  margin-top: 10px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .error {
-  color: red;
-  text-align: center;
-  margin: 2rem 0;
+  color: #ff6b6b;
+  font-weight: 700;
 }

@@ -1,3 +1,16 @@
-ion-button {
-    margin-top: 20px;
+.form-card {
+  width: min(720px, 100%);
+  margin: 0 auto;
+}
+
+.actions {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.save-btn {
+  --background: linear-gradient(90deg, #6366f1, #22d3ee);
+  --border-radius: 16px;
+  font-weight: 900;
 }

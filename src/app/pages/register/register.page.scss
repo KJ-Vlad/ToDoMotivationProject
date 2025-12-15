@@ -1,5 +1,28 @@
-.error {
-  color: red;
-  margin: 12px 0;
+.auth-wrap {
+  min-height: calc(100vh - 110px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-card {
+  width: min(520px, 100%);
+}
+
+.auth-head h2 {
+  margin: 0 0 6px 0;
+  font-weight: 800;
+  color: #fff;
+}
+
+.auth-head p {
+  margin: 0 0 14px 0;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.auth-error {
+  margin: 10px 0;
+  color: #ff6b6b;
   text-align: center;
+  font-weight: 600;
 }
