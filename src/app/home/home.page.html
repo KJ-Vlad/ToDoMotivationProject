@@ -11,9 +11,10 @@
     <ion-searchbar
       class="search"
       placeholder="Hledat úkoly..."
-      [(ngModel)]="searchText"
+      [value]="searchTerm"
       (ionInput)="onSearch($event)"
-    ></ion-searchbar>
+      (ionClear)="clearSearch()">
+    </ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
@@ -30,39 +31,63 @@
   </div>
 
   <ng-container *ngIf="!loading; else loadingTpl">
-    <ng-container *ngIf="filteredSortedTasks.length > 0; else emptyTpl">
+    <ng-container *ngIf="filteredTasks.length > 0; else emptyTpl">
+
       <ion-list>
 
-        <ion-item *ngFor="let task of filteredSortedTasks" [class.task-done]="task.done">
+        <ion-item-sliding *ngFor="let task of filteredTasks">
 
-          <!-- CHECKBOX pouze přepíná -->
-          <ion-checkbox
-            slot="start"
-            [checked]="task.done"
-            (click)="$event.stopPropagation()"
-            (ionChange)="toggleDone(task)">
-          </ion-checkbox>
+          <ion-item [class.task-done]="task.done">
 
-          <!-- TEXT -->
-          <ion-label>
-            <h2 class="task-title">{{ task.title }}</h2>
-            <p *ngIf="task.note">{{ task.note }}</p>
-            <p *ngIf="task.date">{{ task.date | date:'d.M.yyyy' }}</p>
-          </ion-label>
+            <!-- Checkbox -->
+            <ion-checkbox
+              slot="start"
+              [checked]="task.done"
+              (ionClick)="$event.stopPropagation()"
+              (ionChange)="toggleDone(task)">
+            </ion-checkbox>
 
-          <!-- EDIT -->
-          <ion-button fill="clear" slot="end" (click)="editTask(task)">
-            <ion-icon name="create-outline"></ion-icon>
-          </ion-button>
+            <!-- Text -->
+            <ion-label>
+              <h2 class="task-title">{{ task.title }}</h2>
+              <p *ngIf="task.note">{{ task.note }}</p>
+              <p *ngIf="task.date">{{ task.date | date:'d.M.yyyy' }}</p>
+            </ion-label>
 
-          <!-- DELETE (VIDITELNÝ KOŠ) -->
-          <ion-button fill="clear" color="danger" slot="end" (click)="confirmDelete(task)">
-            <ion-icon name="trash-outline"></ion-icon>
-          </ion-button>
+            <!-- Edit -->
+            <ion-button
+              fill="clear"
+              slot="end"
+              (click)="editTask(task); $event.stopPropagation()">
+              <ion-icon name="create-outline"></ion-icon>
+            </ion-button>
 
-        </ion-item>
+            <!-- DELETE ICON (VIDITELNÉ) -->
+            <ion-button
+              fill="clear"
+              color="danger"
+              slot="end"
+              (click)="confirmDelete(task); $event.stopPropagation()">
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
+
+          </ion-item>
+
+          <!-- SWIPE DELETE (funguje znovu) -->
+          <ion-item-options side="end">
+            <ion-item-option
+              color="danger"
+              expandable
+              (click)="confirmDelete(task)">
+              <ion-icon name="trash-outline"></ion-icon>
+              Smazat
+            </ion-item-option>
+          </ion-item-options>
+
+        </ion-item-sliding>
 
       </ion-list>
+
     </ng-container>
   </ng-container>
 
@@ -71,24 +96,30 @@
   </ng-template>
 
   <ng-template #emptyTpl>
-    <div class="empty">Zatím nemáš žádné úkoly.</div>
+    <div class="empty">
+      <ng-container *ngIf="searchTerm?.trim()?.length; else noTasks">
+        Nic nenalezeno pro: <b>{{ searchTerm }}</b>
+      </ng-container>
+
+      <ng-template #noTasks>
+        Zatím nemáš žádné úkoly.
+      </ng-template>
+    </div>
   </ng-template>
 
-  <!-- FAB: + uprostřed dole -->
+  <!-- FAB -->
   <ion-fab vertical="bottom" horizontal="center" slot="fixed">
     <ion-fab-button (click)="newTask()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
-  <!-- FAB: kalendář vpravo dole -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button color="tertiary" (click)="goToCalendar()">
       <ion-icon name="calendar-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
-  <!-- FAB: motivace vlevo dole -->
   <ion-fab vertical="bottom" horizontal="start" slot="fixed">
     <ion-fab-button style="--background: #ffcc00;" (click)="goToMotivation()">
       <ion-icon name="bulb-outline"></ion-icon>

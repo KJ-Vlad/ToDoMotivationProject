@@ -53,10 +53,10 @@ ion-content.edit-content {
   opacity: 0.9;
 }
 
-/* === Kalendář (stejný jako Calendar page) === */
+/* === Kalendář box (stejný vibe jako Calendar page) === */
 .task-calendar-card {
   border-radius: 18px;
-  padding: 14px;
+  padding: 0;
 
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -66,20 +66,71 @@ ion-content.edit-content {
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
 
   overflow: hidden;
+
+  /* ✅ klíč: centrování kalendáře jako bloku */
+  display: flex;
+  justify-content: center;
 }
 
+/* ion-datetime jako "fit-content" blok uprostřed */
 .task-calendar-card ion-datetime {
-  width: 100%;
+  /* ✅ nejdůležitější změna */
+  width: auto;
+  max-width: 100%;
+
   --background: transparent;
-  --padding-top: 10px;
-  --padding-bottom: 10px;
+  --padding-top: 0;
+  --padding-bottom: 0;
+
+  display: block;
 }
 
+/* Vnitřní panel (ten rámeček uvnitř) */
 .task-calendar-card ion-datetime::part(content) {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 14px;
-  padding: 12px;
+
+  padding: 18px;
+  margin: 16px;
+
+  box-sizing: border-box;
+
+  /* ✅ content je flex -> vše uprostřed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ✅ samotný kalendářní blok zarovnat doprostřed */
+.task-calendar-card ion-datetime::part(calendar) {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+
+  /* šířka kalendáře – sedí jako na calendar page */
+  width: 420px !important;
+  max-width: 100% !important;
+}
+
+/* header / month-year / tlačítka – bezpečně centrovat */
+.task-calendar-card ion-datetime::part(header) {
+  justify-content: center !important;
+}
+
+.task-calendar-card ion-datetime::part(month-year-button) {
+  margin: 0 auto !important;
+}
+
+.task-calendar-card ion-datetime::part(next-button),
+.task-calendar-card ion-datetime::part(previous-button) {
+  margin-top: 2px;
+}
+
+/* některé ionic8 layouty mají ještě container wrapper */
+.task-calendar-card ion-datetime::part(container),
+.task-calendar-card ion-datetime::part(calendar-container) {
+  background: transparent !important;
 }
 
 /* === Akce === */

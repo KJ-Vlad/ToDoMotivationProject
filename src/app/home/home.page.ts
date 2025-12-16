@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IonicModule, AlertController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
 import { TaskService } from '../services/task.service';
 import { Task } from '../models/task';
 import { AuthService } from '../services/auth.service';
@@ -11,7 +9,7 @@ import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule],
+  imports: [IonicModule, CommonModule],
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
@@ -20,7 +18,8 @@ export class HomePage implements OnInit {
   tasks: Task[] = [];
   loading = true;
 
-  searchText = '';
+  // SEARCH
+  searchTerm = '';
 
   constructor(
     private taskService: TaskService,
@@ -46,28 +45,31 @@ export class HomePage implements OnInit {
     }
   }
 
-  // Search handler
+  // ===== SEARCH LOGIKA =====
   onSearch(ev: any) {
-    this.searchText = ev.target?.value ?? '';
+    const value = ev?.detail?.value ?? '';
+    this.searchTerm = value;
   }
 
-  // seřazení: nedokončené nahoře, dokončené dole
-  get sortedTasks(): Task[] {
-    return [...this.tasks].sort((a, b) => Number(a.done) - Number(b.done));
+  clearSearch() {
+    this.searchTerm = '';
   }
 
-  // vyfiltrované + seřazené
-  get filteredSortedTasks(): Task[] {
-    const q = this.searchText.trim().toLowerCase();
-    const base = this.sortedTasks;
+  // ===== SEŘAZENÍ + FILTR =====
+  get filteredTasks(): Task[] {
+    const term = this.searchTerm.trim().toLowerCase();
 
-    if (!q) return base;
+    const base = [...this.tasks].sort((a, b) => Number(a.done) - Number(b.done));
 
-    return base.filter(t =>
-      t.title.toLowerCase().includes(q) ||
-      (t.note ?? '').toLowerCase().includes(q) ||
-      (t.date ?? '').toLowerCase().includes(q)
-    );
+    if (!term) return base;
+
+    return base.filter(t => {
+      const title = (t.title || '').toLowerCase();
+      const note = (t.note || '').toLowerCase();
+      const dateStr = t.date ? new Date(t.date).toLocaleDateString('cs-CZ') : '';
+
+      return title.includes(term) || note.includes(term) || dateStr.includes(term);
+    });
   }
 
   // statistiky
@@ -108,7 +110,7 @@ export class HomePage implements OnInit {
   async confirmDelete(task: Task) {
     const alert = await this.alertCtrl.create({
       header: 'Smazat úkol?',
-      message: `Opravdu chceš smazat úkol ${task.title}`,
+      message: `Opravdu chceš smazat úkol "${task.title}"?`,
       buttons: [
         { text: 'Zrušit', role: 'cancel' },
         {

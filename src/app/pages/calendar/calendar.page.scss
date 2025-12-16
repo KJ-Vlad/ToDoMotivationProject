@@ -3,11 +3,19 @@
 }
 
 /* Pozadí jako Home (gradient) */
-ion-content {
+ion-content.calendar-content {
   --background: transparent;
-  background: radial-gradient(1200px 700px at 15% 20%, rgba(88, 70, 255, 0.35), transparent 60%),
-              radial-gradient(1200px 700px at 85% 35%, rgba(0, 180, 255, 0.25), transparent 55%),
-              linear-gradient(135deg, #0b1020 0%, #08131a 45%, #07151b 100%);
+  background:
+    radial-gradient(1200px 700px at 15% 20%, rgba(88, 70, 255, 0.35), transparent 60%),
+    radial-gradient(1200px 700px at 85% 35%, rgba(0, 180, 255, 0.25), transparent 55%),
+    linear-gradient(135deg, #0b1020 0%, #08131a 45%, #07151b 100%);
+
+  /* rezerva pro FAB */
+  --padding-bottom: 120px;
+}
+
+ion-content.calendar-content::part(scroll) {
+  padding-bottom: 120px !important;
 }
 
 /* Vycentrování karty doprostřed */
@@ -21,8 +29,8 @@ ion-content {
 
 /* Glass card */
 .calendar-card {
-  width: min(760px, 92vw);
-  border-radius: 18px;
+  width: min(720px, 92vw);
+  border-radius: 20px;
   padding: 18px;
 
   backdrop-filter: blur(14px);
@@ -33,58 +41,105 @@ ion-content {
   box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
 
   overflow: hidden;
+
+  /* drží obsah hezky uprostřed */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Kalendář se "fitne" do karty */
-ion-datetime {
+/* === VNITŘNÍ BOX PRO KALENDÁŘ (jako v edit-task) === */
+.calendar-box {
   width: 100%;
-  margin: 0 auto;
+  border-radius: 18px;
+  padding: 0;
 
-  /* klíč: ať samotný component nemá šedé pozadí */
-  --background: transparent;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 
-  --padding-top: 10px;
-  --padding-bottom: 10px;
+  background: rgba(20, 35, 60, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+
+  overflow: hidden;
+
+  /* ✅ klíč: centrování kalendáře jako bloku */
+  display: flex;
+  justify-content: center;
 }
 
-/* Vnitřní container kalendáře (odstraní šedou “krabici”) */
-ion-datetime::part(container),
-ion-datetime::part(calendar) {
+/* ion-datetime jako "fit-content" blok uprostřed */
+.calendar-box ion-datetime {
+  width: auto;        /* ✅ nejdůležitější */
+  max-width: 100%;
+
+  --background: transparent;
+  --padding-top: 0;
+  --padding-bottom: 0;
+
+  display: block;
+}
+
+/* odstraní šedé plochy uvnitř */
+.calendar-box ion-datetime::part(container),
+.calendar-box ion-datetime::part(calendar),
+.calendar-box ion-datetime::part(calendar-container) {
   background: transparent !important;
 }
 
-/* Obsah kalendáře jako jemný panel (sklo) */
-ion-datetime::part(content) {
+/* vnitřní panel (rámeček uvnitř) */
+.calendar-box ion-datetime::part(content) {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-  padding: 12px;
+  border-radius: 18px;
+
+  padding: 18px;
+  margin: 16px;
+
+  box-sizing: border-box;
+
+  /* ✅ content je flex -> vše uprostřed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Header uvnitř kalendáře (měsíc/rok + šipky) – ať není na šedé */
-ion-datetime::part(month-year-button),
-ion-datetime::part(next-button),
-ion-datetime::part(previous-button) {
+/* ✅ samotný kalendářní blok doprostřed + pevná šířka */
+.calendar-box ion-datetime::part(calendar) {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+
+  width: 420px !important;
+  max-width: 100% !important;
+}
+
+/* Header (měsíc/rok + šipky) – bez šedého pozadí */
+.calendar-box ion-datetime::part(month-year-button),
+.calendar-box ion-datetime::part(next-button),
+.calendar-box ion-datetime::part(previous-button) {
   background: transparent !important;
 }
 
 /* tlačítko vytvoření úkolu */
 .create-task-btn {
+  width: 100%;
   margin-top: 14px;
+
   --border-radius: 999px;
   --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
   font-weight: 800;
   letter-spacing: 0.4px;
 }
 
-/* === FAB: aby nikdy nezmizel pod plochu === */
-ion-fab {
-  position: fixed; /* důležité, když něco rodičovského “řeže” obsah */
+/* ===== FAB: vždy vidět a nikdy pod ničím ===== */
+.home-fab {
+  position: fixed !important;
   right: 18px;
   bottom: 18px;
-  z-index: 99999 !important;
+  z-index: 999999 !important;
 }
 
-ion-fab-button {
-  z-index: 99999 !important;
+.home-fab ion-fab-button {
+  z-index: 999999 !important;
 }
