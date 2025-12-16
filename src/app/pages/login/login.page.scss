@@ -1,23 +1,33 @@
+:host {
+  display: block;
+}
+
 .auth-wrap {
-  min-height: calc(100vh - 110px);
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  padding: 16px;
+  padding-top: calc(16px + env(safe-area-inset-top));
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
 }
 
 .auth-card {
-  width: min(520px, 100%);
+  width: min(520px, 92vw);
 }
 
 .auth-head h2 {
   margin: 0 0 6px 0;
   font-weight: 800;
   color: #fff;
+  line-height: 1.15;
 }
 
 .auth-head p {
   margin: 0 0 14px 0;
   color: rgba(255, 255, 255, 0.75);
+  line-height: 1.35;
 }
 
 .auth-error {
@@ -25,4 +35,34 @@
   color: #ff6b6b;
   text-align: center;
   font-weight: 600;
+}
+
+/* DŮLEŽITÉ: styluj ion-item jen přes class, ne globálně */
+.auth-item {
+  --background: rgba(255, 255, 255, 0.05);
+  --border-radius: 14px;
+  --min-height: 52px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 380px) {
+  .auth-wrap {
+    padding: 12px;
+    padding-top: calc(12px + env(safe-area-inset-top));
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .auth-head h2 {
+    font-size: 18px;
+  }
+
+  .auth-head p {
+    font-size: 13px;
+  }
+}
+
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .auth-card {
+    background: rgba(20, 35, 60, 0.75);
+  }
 }

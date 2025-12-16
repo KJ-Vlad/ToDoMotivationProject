@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "914658182552",
+    "project_id": "databaze-todomotivation",
+    "storage_bucket": "databaze-todomotivation.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914658182552:android:188934e7a0f78f6ad0d7ed",
+        "android_client_info": {
+          "package_name": "cz.vladimir.todomotivation"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLgLlRxrx4SNL2TeK3lo-C9RTpngQa9zU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

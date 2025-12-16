@@ -20,12 +20,20 @@ export class LoginPage {
 
   constructor(private auth: AuthService, private router: Router) {}
 
+  /** ✅ pokaždé, když se stránka zobrazí (např. po Odhlásit), vyčisti pole */
+  ionViewWillEnter() {
+    this.email = '';
+    this.password = '';
+    this.error = null;
+    this.loading = false;
+  }
+
   async login() {
     this.error = null;
     this.loading = true;
     try {
       await this.auth.login(this.email, this.password);
-      this.router.navigate(['/home']);
+      this.router.navigate(['/home'], { replaceUrl: true });
     } catch (e: any) {
       this.error = e?.message ?? 'Nepodařilo se přihlásit.';
     } finally {
@@ -34,6 +42,6 @@ export class LoginPage {
   }
 
   goRegister() {
-    this.router.navigate(['/register']);
+    this.router.navigate(['/register'], { replaceUrl: true });
   }
 }

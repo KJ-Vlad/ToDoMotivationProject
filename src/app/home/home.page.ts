@@ -18,7 +18,7 @@ export class HomePage implements OnInit {
   tasks: Task[] = [];
   loading = true;
 
-  // SEARCH
+  // ✅ SEARCH
   searchTerm = '';
 
   constructor(
@@ -31,7 +31,7 @@ export class HomePage implements OnInit {
   async logout() {
     await this.auth.logout();
     this.taskService.clearCache();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/login'], { replaceUrl: true });
   }
 
   async ngOnInit() {
@@ -39,40 +39,41 @@ export class HomePage implements OnInit {
       await this.taskService.loadTasks();
       this.tasks = this.taskService.getTasks();
     } catch (e) {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/login'], { replaceUrl: true });
     } finally {
       this.loading = false;
     }
   }
 
-  // ===== SEARCH LOGIKA =====
+  // ===== SEARCH handlers =====
   onSearch(ev: any) {
-    const value = ev?.detail?.value ?? '';
-    this.searchTerm = value;
+    this.searchTerm = (ev?.detail?.value ?? '').toString();
   }
 
   clearSearch() {
     this.searchTerm = '';
   }
 
-  // ===== SEŘAZENÍ + FILTR =====
+  // ===== filtered + sorted list =====
   get filteredTasks(): Task[] {
     const term = this.searchTerm.trim().toLowerCase();
 
-    const base = [...this.tasks].sort((a, b) => Number(a.done) - Number(b.done));
+    let list = [...this.tasks];
 
-    if (!term) return base;
+    if (term.length > 0) {
+      list = list.filter(t => {
+        const title = (t.title ?? '').toLowerCase();
+        const note = (t.note ?? '').toLowerCase();
+        const date = (t.date ?? '').toString().toLowerCase();
+        return title.includes(term) || note.includes(term) || date.includes(term);
+      });
+    }
 
-    return base.filter(t => {
-      const title = (t.title || '').toLowerCase();
-      const note = (t.note || '').toLowerCase();
-      const dateStr = t.date ? new Date(t.date).toLocaleDateString('cs-CZ') : '';
-
-      return title.includes(term) || note.includes(term) || dateStr.includes(term);
-    });
+    // nedokončené nahoře, dokončené dole
+    return list.sort((a, b) => Number(a.done) - Number(b.done));
   }
 
-  // statistiky
+  // ===== statistiky (počítají ze všech úkolů, ne jen filtrování) =====
   get totalTasks(): number {
     return this.tasks.length;
   }
@@ -88,6 +89,7 @@ export class HomePage implements OnInit {
 
   async toggleDone(task: Task) {
     await this.taskService.toggleDone(task);
+    // refresh reference (kdyby se někde držel starý objekt)
     this.tasks = this.taskService.getTasks();
   }
 
@@ -107,10 +109,11 @@ export class HomePage implements OnInit {
     this.router.navigate(['/calendar']);
   }
 
+  // ===== DELETE (ikonka + swipe používá confirmDelete) =====
   async confirmDelete(task: Task) {
     const alert = await this.alertCtrl.create({
       header: 'Smazat úkol?',
-      message: `Opravdu chceš smazat úkol "${task.title}"?`,
+      message: `Opravdu chceš smazat úkol: <strong>${task.title}</strong>?`,
       buttons: [
         { text: 'Zrušit', role: 'cancel' },
         {
